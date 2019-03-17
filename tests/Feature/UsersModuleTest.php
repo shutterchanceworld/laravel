@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\Concerns;
 
 
+
 class UsersModuleTest extends TestCase
 {
 
@@ -69,7 +70,7 @@ class UsersModuleTest extends TestCase
     public function it_loads_the_new_user_page()
     {
 
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
         
         $this->get('/users/new')
             ->assertStatus(200)
@@ -81,7 +82,7 @@ class UsersModuleTest extends TestCase
     public function it_creates_a_new_user()
     {
 
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
 
         $this->post('/users/',[
             'name' => 'Hiro',
@@ -204,7 +205,7 @@ class UsersModuleTest extends TestCase
     public function it_loads_the_edit_user_page()
     {
 
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
 
         $user = factory(User::class)->create();
         
@@ -284,9 +285,10 @@ class UsersModuleTest extends TestCase
      /** @test */
     public function the_email_must_be_unique_when_updating_the_user()
     {
-        self::markTestIncomplete();
-        return;
-
+        
+        factory(User::class)->create([
+            'email' => 'existing-email@example.com',
+        ]);
 
         $user = factory(User::class)->create([
             'email' => 'bbb@bbb.com'
@@ -295,13 +297,11 @@ class UsersModuleTest extends TestCase
         $this->from("users/details/{$user->id}/edit")
             ->put("users/details/{$user->id}",[
                 'name' => 'Hiro',
-                'email' => 'bbb@bbb.com',
+                'email' => 'existing-email@example.com',
                 'password' => '1234567',
             ])    
-            ->assertRedirect('users/new')
+            ->assertRedirect("users/details/{$user->id}/edit")
             ->assertSessionHasErrors(['email']);
-
-        $this->assertEquals(1, User::count());
         
 
     }    
@@ -327,6 +327,31 @@ class UsersModuleTest extends TestCase
             'name' => 'Hiro',
             'email' => 'bbb@bbb.com',
             'password' => $oldpassword
+        ]);  
+        
+
+    }  
+
+       /** @test */
+    public function the_user_email_can_stay_the_same_when_updating_the_user()
+    {
+
+        $user = factory(User::class)->create([
+            'email' => 'bbb@bbb.com'
+        ]);
+
+        $this->from("users/details/{$user->id}")
+            ->put("users/details/{$user->id}",[
+                'name' => 'Hiro Take',
+                'email' => 'bbb@bbb.com',
+                'password' => '99910991',
+            ])    
+            ->assertRedirect("users/details/{$user->id}");
+
+        $this->assertDatabaseHas('users',[
+            'name' => 'Hiro Take',
+            'email' => 'bbb@bbb.com',
+
         ]);  
         
 
