@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/users','UserController@index')
-	->name('users');
+	->name('users.index');
 
 Route::get('/users/details/{user}', 'UserController@show')
 	->where('user','\d+')
@@ -33,3 +33,5 @@ Route::get('/users/details/{user}/edit','UserController@edit')
 Route::put('/users/details/{user}','UserController@update');
 
 Route::get('/greeting/{name}/{nickname?}', 'WelcomeUserController');
+
+Route::delete('/users/details/{user}','UserController@destroy');
