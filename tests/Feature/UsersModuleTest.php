@@ -242,7 +242,7 @@ class UsersModuleTest extends TestCase
     }
 
     /** @test */
-    public function the_name_is_required_when_updating_a_user()
+    public function the_name_is_required_when_updating_the_user()
     {
 
         $user = factory(User::class)->create();
@@ -262,33 +262,38 @@ class UsersModuleTest extends TestCase
     } 
 
 
-         /** @test */
-    public function the_email_must_be_valid_the_user()
+     /** @test */
+    public function the_email_must_be_valid_when_updating_the_user()
     {
 
-        $this->from('users/new')
-            ->post('/users/',[
+        $user = factory(User::class)->create();
+
+        $this->from("users/details/{$user->id}/edit")
+             ->put("users/details/{$user->id}" ,[
                 'name' => 'Hiro',
-                'email' => 'email-not-valid',
+                'email' => 'mail-not-valid',
                 'password' => '1234567',
             ])    
-            ->assertRedirect('users/new')
+            ->assertRedirect("users/details/{$user->id}/edit")
             ->assertSessionHasErrors(['email']);
 
-        $this->assertEquals(0, User::count());
-        
+        $this->assertDatabaseMissing('users',['name' => 'Hiro']);    
 
     }    
 
      /** @test */
-    public function the_email_must_be_unique_the_user()
+    public function the_email_must_be_unique_when_updating_the_user()
     {
-        factory(User::class)->create([
+        self::markTestIncomplete();
+        return;
+
+
+        $user = factory(User::class)->create([
             'email' => 'bbb@bbb.com'
         ]);
 
-        $this->from('users/new')
-            ->post('/users/',[
+        $this->from("users/details/{$user->id}/edit")
+            ->put("users/details/{$user->id}",[
                 'name' => 'Hiro',
                 'email' => 'bbb@bbb.com',
                 'password' => '1234567',
@@ -302,25 +307,24 @@ class UsersModuleTest extends TestCase
     }    
 
      /** @test */
-    public function the_password_is_required_the_user()
+    public function the_password_is_required_when_updating_the_user()
     {
 
-        $this->from('users/new')
-            ->post('/users/',[
+        $user = factory(User::class)->create();
+
+        $this->from("users/details/{$user->id}/edit")
+            ->put("users/details/{$user->id}",[
                 'name' => 'Hiro',
                 'email' => 'bbb@bbb.com',
                 'password' => '',
             ])    
-            ->assertRedirect('users/new')
+            ->assertRedirect("users/details/{$user->id}/edit")
             ->assertSessionHasErrors(['password']);
 
-        $this->assertEquals(0, User::count());
+        $this->assertDatabaseMissing('users',['email' => 'bbb@bbb.com']);  
         
 
     }  
-
-
-
 
 
 }

@@ -18,8 +18,8 @@
 		</div>
 	@endif
 	
-	<form method="POST" action="{{ url('users')}}">
-
+	<form method="POST" action="{{ url("users/details/{$user->id}") }}">
+		{{ method_field('PUT') }}
 		{!! csrf_field() !!}
 		
 		<label for="name">Name</label>
