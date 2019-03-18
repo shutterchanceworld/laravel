@@ -3,50 +3,49 @@
 @section('title', "Create user")
 
 @section('content')
-	
-	<h1>Create user</h1>
 
-	@if ($errors->any())
-		<div class="alert alert-danger">
-			<p>Please correct this errors below:</p>
-			
+	<div class="card">
+		<div class="card-header">
+	    	<h3>Create user</h3>
+	  	</div>
+	  
+		<div class="card-body">
+			@if ($errors->any())
+				<div class="alert alert-danger">
+					<p>Please correct this errors below:</p>
+					<ul>
+						@foreach($errors->all() as $error)
+						<li>{{ $error }}</li>
+						@endforeach
+					</ul>
+					
+				</div>
+			@endif
+
+			<form method="POST" action="{{ url('users')}}">
+
+				{!! csrf_field() !!}
+
+				<div class="form-group">
+				    <label for="name">Name</label>
+					<input type="text" name="name" class="form-control"  placeholder="Name LastName" value={{ old('name') }} >		    
+				</div>
+				<div class="form-group">
+					<label for="email">Email</label>
+					<input type="email" name="email" class="form-control"  placeholder="email@example.com" value={{ old('email') }} >
+				</div>	
+				<div class="form-group">
+					<label for="password">Password</label>
+				<input type="password" name="password" class="form-control" placeholder="more than 6 characters">
+				</div>	
+				
+				<button type="submit" class="btn btn-primary">Create new user</button>
+				<a href="{{ url('/users/') }}" class="btn btn-link ml-10">Back to user list</a>
+			</form>
+
 		</div>
-	@endif
+   </div>
 	
-	<form method="POST" action="{{ url('users')}}">
-
-		{!! csrf_field() !!}
-		
-		<label for="name">Name</label>
-		<input type="text" name="name" placeholder="Name LastName" value={{ old('name') }} >
-		@if ($errors->has('name'))
-			<br>{{ $errors->first('name') }}
-		@endif
-		<br><br>
-		<label for="email">Email</label>
-		<input type="email" name="email" placeholder="email@example.com" value={{ old('email') }} >
-		@if ($errors->has('email'))
-			<br>{{ $errors->first('email') }}
-		@endif
-		<br><br>
-		<label for="password">Password</label>
-		<input type="password" name="password" placeholder="more than 6 characters">
-		@if ($errors->has('password'))
-			<br>{{ $errors->first('password') }}
-		@endif
-		<br><br>
-		<button type="submit">Create new user</button>
-	</form>
-
-
-
-
-
-	<p>
-		<a href="{{ url('/users/') }}">Back to user list</a>
-	</p>
-	
-		
 
 @endsection
 
