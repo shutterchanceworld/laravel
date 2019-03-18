@@ -10,7 +10,9 @@
 	<ul>
 		@forelse ($users as $user)
 			<li>{{ $user->name }},{{ $user->email }}
-			<a href="{{ route('users.show',['id' => $user->id]) }}">More details</a></li>
+				<a href="{{ route('users.show',['id' => $user->id]) }}">More details</a> |
+				<a href="{{ route('users.edit',['id' => $user->id])}}">Edit</a>
+			</li>
 		@empty
 			<p>No registered users.</p>	
 		@endforelse
