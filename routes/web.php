@@ -34,4 +34,5 @@ Route::put('/users/details/{user}','UserController@update');
 
 Route::get('/greeting/{name}/{nickname?}', 'WelcomeUserController');
 
-Route::delete('/users/details/{user}','UserController@destroy');
+Route::delete('/users/details/{user}','UserController@destroy')
+	->name('users.destroy');

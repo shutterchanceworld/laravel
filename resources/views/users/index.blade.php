@@ -6,12 +6,21 @@
 	
 	<h1>{{ $title }}</h1>
 	<hr>
+
+	<p>
+		<a href="{{ route('users.create') }}">New user</a>
+	</p>
 		
 	<ul>
 		@forelse ($users as $user)
 			<li>{{ $user->name }},{{ $user->email }}
-				<a href="{{ route('users.show',['id' => $user->id]) }}">More details</a> |
-				<a href="{{ route('users.edit',['id' => $user->id])}}">Edit</a>
+				<a href="{{ route('users.show', $user) }}">More details</a> |
+				<a href="{{ route('users.edit', $user) }}">Edit</a> |
+				<form action="{{ route('users.destroy',$user)}}" method="POST">
+					{{ csrf_field() }}
+					{{ method_field('DELETE') }}
+					<button type="submit">Delete</button>
+				</form>
 			</li>
 		@empty
 			<p>No registered users.</p>	
